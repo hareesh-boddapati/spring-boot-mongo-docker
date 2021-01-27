@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+ name: replicatonconroller
+ namespace: logging
+spec:
+ replicas: 2
+ selector:
+  name: replicatonconroller
+ template:
+  metadata:
+   name: replication-pod
+   labels:
+    name: replicatonconroller
+  spec:
+   containers:
+   - name: onlinestore
+     image: hareeshdock/online-bookstore:1.0.0
+     ports:
+     - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+ namespace: logging
+ name: replication-svc
+spec:
+ selector:
+  name: replicatonconroller
+ type: NodePort
+ ports:
+ - port: 8080
+   targetPort: 8080
+   nodePort: 32211
